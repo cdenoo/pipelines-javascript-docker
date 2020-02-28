@@ -16,7 +16,7 @@ variables:
   containerRegistry: 'denoocecreg.azurecr.io'
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
-  imagePullSecret: 'denoocecreg119299aa-auth'
+  imagePullSecret: 'myimagepullsecretv1'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
@@ -40,6 +40,7 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
+          latest
           
     - upload: manifests
       artifact: manifests
@@ -69,6 +70,7 @@ stages:
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes cluster
             inputs:
+              kubernetesServiceConnection: 'Kube'
               action: deploy
               manifests: |
                 $(Pipeline.Workspace)/manifests/deployment.yml
