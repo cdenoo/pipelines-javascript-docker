@@ -11,6 +11,6 @@ spec:
     spec:
       containers:
         - name: pipelinesjavascriptdocker 
-          image: denoocecr.azurecr.io/pipelinesjavascriptdocker
+          image: denoocecreg.azurecr.io/pipelinesjavascriptdocker
           ports:
           - containerPort: 8080
