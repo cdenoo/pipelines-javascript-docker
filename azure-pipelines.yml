@@ -53,7 +53,7 @@ stages:
     displayName: Deploy
     pool:
       vmImage: $(vmImageName)
-    environment: 'cdenoopipelinesjavascriptdocker.default'
+    environment: 'cdenoopipelinesjavascriptdocker'
     strategy:
       runOnce:
         deploy:
