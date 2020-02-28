@@ -17,6 +17,7 @@ variables:
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
   imagePullSecret: 'myimagepullsecretv1'
+  kubeConn: 'k8scl-dns-046b4aef.hcp.westeurope.azmk8s.io'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
@@ -62,7 +63,7 @@ stages:
           - task: KubernetesManifest@0
             displayName: Create imagePullSecret
             inputs:
-              kubernetesServiceConnection: 'Kube'
+              kubernetesServiceConnection: $(kubeConn)
               action: createSecret
               secretName: $(imagePullSecret)
               dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
@@ -70,7 +71,7 @@ stages:
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes cluster
             inputs:
-              kubernetesServiceConnection: 'Kube'
+              kubernetesServiceConnection: $(kubeConn)
               action: deploy
               manifests: |
                 $(Pipeline.Workspace)/manifests/deployment.yml
