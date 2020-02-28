@@ -12,12 +12,12 @@ variables:
 
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: 'CREG'
-  imageRepository: 'DemoRepo'
+  imageRepository: 'pipelinesjavascriptdocker'
   containerRegistry: 'https://denoocecreg.azurecr.io'
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
   imagePullSecret: 'denoocecr21087ded3-auth'
-  deployEnvironment: 'DemoRepo.default'
+  deployEnvironment: 'pipelinesjavascriptdocker.default'
   aksConnName: 'Kube'
 
   # Agent VM image name
