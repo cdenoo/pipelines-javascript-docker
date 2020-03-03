@@ -15,8 +15,8 @@ variables:
   containerRegistry: 'https://denoocecreg.azurecr.io'
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
-  imagePullSecret: 'myimagepullsecretv1'
-  deployEnvironment: 'pipelinesjavascriptdocker.development'
+  imagePullSecret: 'denoocecr21087ded3-auth'
+  deployEnvironment: 'pipelinesjavascriptdocker'
   aksConnName: 'Kube'
 
   # Agent VM image name
@@ -80,3 +80,4 @@ stages:
                 $(imagePullSecret)
               containers: |
                 $(containerRegistry)/$(imageRepository):$(tag)
+
