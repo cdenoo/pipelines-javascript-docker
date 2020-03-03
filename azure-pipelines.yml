@@ -29,9 +29,9 @@ stages:
       displayName: Build and push an image to container registry
       inputs:
         command: buildAndPush
-        repository: $(docker.imageRepository)
+        repository: $(dockerImageRepository)
         dockerfile: $(dockerfilePath)
-        containerRegistry: $(docker.connectionName)
+        containerRegistry: $(dockerConnectionName)
         tags: |
           $(tag)
           latest
@@ -48,7 +48,7 @@ stages:
     displayName: Deploy
     pool:
       vmImage: $(vmImageName)
-    environment: $(kubernetes.deployEnvironment)
+    environment: $(kubernetesDeployEnvironment)
     strategy:
       runOnce:
         deploy:
@@ -56,21 +56,21 @@ stages:
           - task: KubernetesManifest@0
             displayName: Create imagePullSecret
             inputs:
-              kubernetesServiceConnection: $(kubernetes.connectionName)
+              kubernetesServiceConnection: $(kubernetesConnectionName)
               action: createSecret
               secretName: $(kubernetes.imagePullSecret)
-              dockerRegistryEndpoint: $(docker.connectionName)
+              dockerRegistryEndpoint: $(dockerConnectionName)
               
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes cluster
             inputs:
-              kubernetesServiceConnection: $(kubernetes.connectionName)
+              kubernetesServiceConnection: $(kubernetesConnectionName)
               action: deploy
               manifests: |
                 $(Pipeline.Workspace)/manifests/deployment.yml
                 $(Pipeline.Workspace)/manifests/service.yml
               imagePullSecrets: |
-                $(kubernetes.imagePullSecret)
+                $(kubernetesImagePullSecret)
               containers: |
-                $(docker.acrUrl)/$(docker.imageRepository):$(tag)
+                $(dockerCcrUrl)/$(dockerImageRepository):$(tag)
 
