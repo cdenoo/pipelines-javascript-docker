@@ -16,7 +16,7 @@ variables:
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
   imagePullSecret: 'myimagepullsecretv1'
-  deployEnvironment: 'pipelinesjavascriptdocker.default'
+  deployEnvironment: 'pipelinesjavascriptdocker.app'
   aksConnName: 'Kube'
   azureResourceGroup: 'app'
 
