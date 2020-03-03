@@ -11,12 +11,12 @@ resources:
 variables:
 
   dockerRegistryServiceConnection: 'CREG'
-  imageRepository: 'pipelinesjavascriptdocker'
+  imageRepository: 'app'
   containerRegistry: 'https://denoocecreg.azurecr.io'
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
   imagePullSecret: 'myimagepullsecretv2'
-  deployEnvironment: 'pipelinesjavascriptdocker'
+  deployEnvironment: 'app'
   aksConnName: 'Kube'
 
   # Agent VM image name
