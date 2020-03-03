@@ -10,14 +10,14 @@ resources:
 
 variables:
 
-  # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: 'CREG'
-  imageRepository: 'app'
-  containerRegistry: 'denoocecreg.azurecr.io'
+  imageRepository: 'pipelinesjavascriptdocker'
+  containerRegistry: 'https://denoocecreg.azurecr.io'
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
   imagePullSecret: 'myimagepullsecretv1'
-  kubeConn: 'Kube'
+  deployEnvironment: 'pipelinesjavascriptdocker.default'
+  aksConnName: 'Kube'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
@@ -55,7 +55,7 @@ stages:
     displayName: Deploy
     pool:
       vmImage: $(vmImageName)
-    environment: 'cdenoopipelinesjavascriptdocker'
+    environment: $(deployEnvironment)
     strategy:
       runOnce:
         deploy:
@@ -63,7 +63,7 @@ stages:
           - task: KubernetesManifest@0
             displayName: Create imagePullSecret
             inputs:
-              kubernetesServiceConnection: $(kubeConn)
+              kubernetesServiceConnection: $(aksConnName)
               action: createSecret
               secretName: $(imagePullSecret)
               dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
@@ -71,7 +71,7 @@ stages:
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes cluster
             inputs:
-              kubernetesServiceConnection: $(kubeConn)
+              kubernetesServiceConnection: $(aksConnName)
               action: deploy
               manifests: |
                 $(Pipeline.Workspace)/manifests/deployment.yml
