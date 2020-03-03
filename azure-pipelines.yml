@@ -9,11 +9,15 @@ resources:
 - repo: self
 
 variables:
-  dockerfilePath: '**/Dockerfile'
-  tag: '$(Build.BuildId)'
+- group: DemoVariables
+- name: dockerfilePath
+  value: '**/Dockerfile'
+- name: tag
+  value: '$(Build.BuildId)'
 
   # Agent VM image name
-  vmImageName: 'ubuntu-latest'
+- name: vmImageName
+  value: 'ubuntu-latest'
   
 
 stages:
