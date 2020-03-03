@@ -10,14 +10,14 @@ resources:
 
 variables:
 
-  dockerRegistryServiceConnection: 'CREG'
-  imageRepository: $(docker.repository)
-  containerRegistry: 'https://denoocecreg.azurecr.io'
+  dockerRegistryServiceConnection: $(docker.connectionName)
+  imageRepository: $(docker.imageRepository)
+  containerRegistry: $(docker.acrUrl)
+  imagePullSecret: $(kubernetes.imagePullSecret)
+  deployEnvironment: $(kubernetes.deployEnvironment)
+  aksConnName: $(kubernetes.connectionName)
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
-  imagePullSecret: 'myimagepullsecretv2'
-  deployEnvironment: 'app'
-  aksConnName: 'Kube'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
