@@ -17,7 +17,7 @@ variables:
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
   imagePullSecret: 'myimagepullsecretv1'
-  kubeConn: 'k8scl-dns-046b4aef.hcp.westeurope.azmk8s.io'
+  kubeConn: 'k8scl-dns-a7f10884.hcp.northeurope.azmk8s.io'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
