@@ -18,6 +18,7 @@ variables:
   imagePullSecret: 'myimagepullsecretv1'
   deployEnvironment: 'pipelinesjavascriptdocker.default'
   aksConnName: 'Kube'
+  azureResourceGroup: 'app'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
@@ -63,6 +64,7 @@ stages:
           - task: KubernetesManifest@0
             displayName: Create imagePullSecret
             inputs:
+              azureResourceGroup: $(azureResourceGroup)
               kubernetesServiceConnection: $(aksConnName)
               action: createSecret
               secretName: $(imagePullSecret)
@@ -71,6 +73,7 @@ stages:
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes cluster
             inputs:
+              azureResourceGroup: $(azureResourceGroup)
               kubernetesServiceConnection: $(aksConnName)
               action: deploy
               manifests: |
@@ -80,4 +83,3 @@ stages:
                 $(imagePullSecret)
               containers: |
                 $(containerRegistry)/$(imageRepository):$(tag)
-
