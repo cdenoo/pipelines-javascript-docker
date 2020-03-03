@@ -15,7 +15,7 @@ variables:
   containerRegistry: 'https://denoocecreg.azurecr.io'
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
-  imagePullSecret: 'denoocecr21087ded3-auth'
+  imagePullSecret: 'myimagepullsecretv2'
   deployEnvironment: 'pipelinesjavascriptdocker'
   aksConnName: 'Kube'
 
