@@ -9,13 +9,6 @@ resources:
 - repo: self
 
 variables:
-
-  dockerRegistryServiceConnection: $(docker.connectionName)
-  imageRepository: $(docker.imageRepository)
-  containerRegistry: $(docker.acrUrl)
-  imagePullSecret: $(kubernetes.imagePullSecret)
-  deployEnvironment: $(kubernetes.deployEnvironment)
-  aksConnName: $(kubernetes.connectionName)
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
 
@@ -36,9 +29,9 @@ stages:
       displayName: Build and push an image to container registry
       inputs:
         command: buildAndPush
-        repository: $(imageRepository)
+        repository: $(docker.imageRepository)
         dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
+        containerRegistry: $(docker.connectionName)
         tags: |
           $(tag)
           latest
@@ -55,7 +48,7 @@ stages:
     displayName: Deploy
     pool:
       vmImage: $(vmImageName)
-    environment: $(deployEnvironment)
+    environment: $(kubernetes.deployEnvironment)
     strategy:
       runOnce:
         deploy:
@@ -63,21 +56,21 @@ stages:
           - task: KubernetesManifest@0
             displayName: Create imagePullSecret
             inputs:
-              kubernetesServiceConnection: $(aksConnName)
+              kubernetesServiceConnection: $(kubernetes.connectionName)
               action: createSecret
-              secretName: $(imagePullSecret)
-              dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
+              secretName: $(kubernetes.imagePullSecret)
+              dockerRegistryEndpoint: $(docker.connectionName)
               
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes cluster
             inputs:
-              kubernetesServiceConnection: $(aksConnName)
+              kubernetesServiceConnection: $(kubernetes.connectionName)
               action: deploy
               manifests: |
                 $(Pipeline.Workspace)/manifests/deployment.yml
                 $(Pipeline.Workspace)/manifests/service.yml
               imagePullSecrets: |
-                $(imagePullSecret)
+                $(kubernetes.imagePullSecret)
               containers: |
-                $(containerRegistry)/$(imageRepository):$(tag)
+                $(docker.acrUrl)/$(docker.imageRepository):$(tag)
 
