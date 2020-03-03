@@ -11,7 +11,7 @@ resources:
 variables:
 
   dockerRegistryServiceConnection: 'CREG'
-  imageRepository: ${{ docker.repository }}
+  imageRepository: $(docker.repository)
   containerRegistry: 'https://denoocecreg.azurecr.io'
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
