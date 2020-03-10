@@ -67,7 +67,7 @@ stages:
                 kubernetesServiceConnection: 'KUBE'
                 command: 'upgrade'
                 chartType: 'Name'
-                chartName: '$(containerRegistry)/denoocecreg'
+                chartName: '$(containerRegistry)/newchart'
                 releaseName: 'denoocecreg'
 
 
