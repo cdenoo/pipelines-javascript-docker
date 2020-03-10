@@ -41,17 +41,11 @@ stages:
         tags: |
           $(tag)
           latest
-
-    - task: HelmDeploy@0
-      displayName: 'Package Helm Chart'
-      inputs:
-        command: 'package'
-        chartPath: 'charts/newchart'
-        chartVersion: '$(Build.BuildNumber)'
-        save: false
     - script: |
         az login --service-principal -u $(clientID) -p $(spSecret) --tenant $(tenantID)
         az acr login -n denoocecreg
+        helm package ./charts/newchart --version $(Build.BuildNumber) \
+          --destination $(Build.ArtifactStagingDirectory)
         az acr helm push \
           --name $(containerRegistry) \
           $(Build.ArtifactStagingDirectory)/$(imageRepository)-$(Build.BuildNumber).tgz
