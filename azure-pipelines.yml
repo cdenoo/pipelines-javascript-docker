@@ -53,62 +53,28 @@ stages:
           $(Build.ArtifactStagingDirectory)/$(dockerImageRepository)-$(Build.BuildNumber).tgz
       displayName: Push helm package to ACR
 
-# - stage: Deploy
-#   displayName: Deploy stage
-#   # dependsOn: Build
+- stage: Deploy
+  displayName: Deploy stage
+  dependsOn: Build
 
-#   jobs:
-#   - deployment: Deploy
-#     displayName: Deploy
-#     environment: pipelines-javascript-docker
-#     pool:
-#       vmImage: $(vmImageName)
-#     strategy:
-#       runOnce:
-#         deploy:
-#           steps:
-#             - script: dir
-#               workingDirectory: $(Build.SourcesDirectory)
-            # - task: HelmInstaller@1
-            #   displayName: Install helm version 3.1.1
-            #   inputs:
-            #     helmVersionToInstall: '3.1.1'
-            # - task: HelmDeploy@0
-            #   displayName: 'Helm Deploy'
-            #   inputs:
-            #     connectionType: 'Kubernetes Service Connection'
-            #     kubernetesServiceConnection: 'KUBE'
-            #     command: 'upgrade'
-            #     chartType: 'Name'
-            #     chartName: '$(containerRegistry)/newchart'
-            #     releaseName: 'denoocecreg'
-
-            # - script: |
-            #     az login --service-principal -u $(clientID) -p $(spSecret) --tenant $(tenantID)
-            #     az acr login -n denoocecreg
-
-            # - task: HelmDeploy@0
-            #   displayName: 'Package Helm Chart'
-            #   inputs:
-            #     command: 'package'
-            #     chartPath: '$(Build.SourcesDirectory)/charts/newchart'
-            #     chartVersion: '$(Build.BuildNumber)'
-            #     save: false
-
-
-#           - script: |
-#               helm repo add denoocecreg denoocecreg.azurecr.io
-#               helm repo update
-#               exit 0
-#           - task: HelmDeploy@0
-#             inputs:
-#               connectionType: 'Kubernetes Service Connection'
-#               kubernetesServiceConnection: 'KUBE'
-#               command: 'install'
-#               chartType: 'Name'
-#               chartName: 'denoocecreg/newchart'
-#           # - task: HelmDeploy@0
-#           #   inputs:
-#           #     connectionType: 'Kubernetes Service Connection'
-#           #     kubernetesServiceConnection: 'KUBE'
-#           #     command: 'ls'
+  jobs:
+  - deployment: Deploy
+    displayName: Deploy
+    environment: pipelines-javascript-docker
+    pool:
+      vmImage: $(vmImageName)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - task: HelmInstaller@1
+              displayName: Install helm version 3.1.1
+              inputs:
+                helmVersionToInstall: '3.1.1'
+            - task: HelmDeploy@0
+              inputs:
+                connectionType: 'Kubernetes Service Connection'
+                kubernetesServiceConnection: 'KUBE'
+                command: 'upgrade'
+                chartType: 'FilePath'
+                chartPath: '$(Build.ArtifactStagingDirectory)/$(dockerImageRepository)-$(Build.BuildNumber).tgz'
