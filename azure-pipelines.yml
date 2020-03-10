@@ -41,10 +41,18 @@ stages:
       displayName: Install helm version 3.1.1
       inputs:
         helmVersionToInstall: '3.1.1'
-    - script: |
-        helm package ./charts/$(dockerImageRepository) --version $(Build.BuildNumber) \
-          --destination $(Build.ArtifactStagingDirectory)
+    - task: HelmDeploy@0
+      inputs:
+        command: 'package'
+        chartPath: './charts/$(dockerImageRepository)'
+        chartVersion: '$(Build.BuildNumber)'
+        save: false
       displayName: Build helm package
+    # - script: |
+    #     helm package ./charts/$(dockerImageRepository) --version $(Build.BuildNumber) \
+    #       --destination $(Build.ArtifactStagingDirectory)
+    #   displayName: Build helm package
+
     - script: |
         az login --service-principal -u $(clientID) -p $(spSecret) --tenant $(tenantID)
         az acr login -n denoocecreg
@@ -74,6 +82,14 @@ stages:
               displayName: Install helm version 3.1.1
               inputs:
                 helmVersionToInstall: '3.1.1'
+
+            - task: KubernetesManifest@0
+              displayName: Create imagePullSecret
+              inputs:
+                kubernetesServiceConnection: $(kubernetesConnectionName)
+                action: createSecret
+                secretName: $(kubernetesImagePullSecret)
+                dockerRegistryEndpoint: $(dockerConnectionName)
             - task: HelmDeploy@0
               inputs:
                 connectionType: 'Kubernetes Service Connection'
@@ -81,3 +97,4 @@ stages:
                 command: 'upgrade'
                 chartType: 'FilePath'
                 chartPath: '$(Pipeline.Workspace)/helmchart/$(dockerImageRepository)-$(Build.BuildNumber).tgz'
+                overrideValues: 'pullSecret=$(kubernetesImagePullSecret)'
