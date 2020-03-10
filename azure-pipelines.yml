@@ -64,11 +64,9 @@ stages:
             inputs:
               connectionType: 'Kubernetes Service Connection'
               kubernetesServiceConnection: 'KUBE'
-              command: 'upgrade'
-              chartType: 'Name'
-              chartName: 'newchart'
-
-          
+              command: 'install'
+              chartType: 'FilePath'
+              chartPath: './newchart'
           - task: HelmDeploy@0
             inputs:
               connectionType: 'Kubernetes Service Connection'
