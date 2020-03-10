@@ -16,7 +16,7 @@ variables:
   containerRegistry: 'denoocecreg.azurecr.io'
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
-  imagePullSecret: 'denoocecreg7536bf3a-auth'
+  imagePullSecret: 'myimagepullsecretv2'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
@@ -40,9 +40,7 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
-          
-    - upload: manifests
-      artifact: manifests
+          latest
 
 - stage: Deploy
   displayName: Deploy stage
@@ -59,5 +57,13 @@ stages:
         deploy:
           steps:
           - task: HelmInstaller@1
+            displayName: Install helm version 3.1.1
             inputs:
               helmVersionToInstall: '3.1.1'
+          # - task: HelmDeploy@0
+          #   displayName: Helm deploy
+          #   inputs:
+          #     connectionType: Kubernetes Service Connection
+          #     kubernetesServiceEndpoint: KUBE
+          # - script: 'helm install .\\newchart\\ --generate-name'
+          - script: 'helm ls'
