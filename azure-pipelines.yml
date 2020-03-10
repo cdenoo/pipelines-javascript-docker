@@ -43,7 +43,7 @@ stages:
         helm package ./charts/newchart --version $(Build.BuildNumber) \
           --destination $(Build.ArtifactStagingDirectory)
         az acr helm push \
-          --name $(dockerImageRepository) \
+          --name $(ACRName) \
           $(Build.ArtifactStagingDirectory)/$(dockerImageRepository)-$(Build.BuildNumber).tgz
 
 # - stage: Deploy
