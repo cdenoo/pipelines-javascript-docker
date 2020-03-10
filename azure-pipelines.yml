@@ -74,3 +74,4 @@ stages:
           #     command: 'ls'
           - script: dir
             displayName: List contents of a folder
+            workingDirectory: $(Agent.HomeDirectory)
