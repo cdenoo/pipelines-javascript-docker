@@ -14,3 +14,5 @@ spec:
           image: denoocecreg.azurecr.io/app
           ports:
           - containerPort: 8080
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecret }}
