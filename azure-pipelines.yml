@@ -52,6 +52,9 @@ stages:
           --name $(ACRName) \
           $(Build.ArtifactStagingDirectory)/$(dockerImageRepository)-$(Build.BuildNumber).tgz
       displayName: Push helm package to ACR
+    - task: PublishBuildArtifacts@1
+      inputs:
+        ArtifactName: helmchart
 
 - stage: Deploy
   displayName: Deploy stage
@@ -77,4 +80,4 @@ stages:
                 kubernetesServiceConnection: 'KUBE'
                 command: 'upgrade'
                 chartType: 'FilePath'
-                chartPath: '$(Build.ArtifactStagingDirectory)/$(dockerImageRepository)-$(Build.BuildNumber).tgz'
+                chartPath: '$(Pipeline.Workspace)/helmchart/$(dockerImageRepository)-$(Build.BuildNumber).tgz'
