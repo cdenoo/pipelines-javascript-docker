@@ -64,7 +64,7 @@ stages:
               helmVersionToInstall: '3.1.1'
 
           - script: |
-              helm repo add denoocecreg.azurecr.io
+              helm repo add denoocecreg denoocecreg.azurecr.io
               helm repo update
               exit 0
           - task: HelmDeploy@0
