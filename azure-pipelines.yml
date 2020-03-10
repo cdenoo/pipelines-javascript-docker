@@ -78,7 +78,7 @@ stages:
               displayName: 'Package Helm Chart'
               inputs:
                 command: 'package'
-                chartPath: 'charts/newchart'
+                chartPath: '$(Build.SourcesDirectory)/charts/newchart'
                 chartVersion: '$(Build.BuildNumber)'
                 save: false
 
