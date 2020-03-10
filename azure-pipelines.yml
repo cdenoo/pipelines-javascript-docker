@@ -74,6 +74,14 @@ stages:
                 az login --service-principal -u $(clientID) -p $(spSecret) --tenant $(tenantID)
                 az acr login -n denoocecreg
 
+            - task: HelmDeploy@0
+              displayName: 'Package Helm Chart'
+              inputs:
+                command: 'package'
+                chartPath: 'charts/newchart'
+                chartVersion: '$(Build.BuildNumber)'
+                save: false
+
 
 #           - script: |
 #               helm repo add denoocecreg denoocecreg.azurecr.io
