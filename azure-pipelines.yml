@@ -41,38 +41,35 @@ stages:
     #     tags: |
     #       $(tag)
     #       latest
-    - task: HelmInstaller@1
-      displayName: Install helm version 3.1.1
-      inputs:
-        helmVersionToInstall: '3.1.1'
-    - script: |
-        az login
-        az acr login -n denoocecreg
-        az acr helm repo add -n denoocecreg
-        az acr helm repo update
-      displayName: Adding and updating helm repo
-    
-    
 
-# - stage: Deploy
-#   displayName: Deploy stage
-#   # dependsOn: Build
+- stage: Deploy
+  displayName: Deploy stage
+  # dependsOn: Build
 
-#   jobs:
-#   - deployment: Deploy
-#     displayName: Deploy
-#     environment: pipelines-javascript-docker
-#     pool:
-#       vmImage: $(vmImageName)
-#     strategy:
-#       runOnce:
-#         deploy:
-#           steps:
+  jobs:
+  - deployment: Deploy
+    displayName: Deploy
+    environment: pipelines-javascript-docker
+    pool:
+      vmImage: $(vmImageName)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - task: HelmInstaller@1
+              displayName: Install helm version 3.1.1
+              inputs:
+                helmVersionToInstall: '3.1.1'
+            - task: HelmDeploy@0
+              displayName: 'Helm Deploy'
+              inputs:
+                connectionType: 'Kubernetes Service Connection'
+                kubernetesServiceConnection: 'KUBE'
+                command: 'upgrade'
+                chartType: 'Name'
+                chartName: '$(containerRegistry)/$(containerRepository)'
+                releaseName: '$(containerRepository)'
 
-#           - task: HelmInstaller@1
-#             displayName: Install helm version 3.1.1
-#             inputs:
-#               helmVersionToInstall: '3.1.1'
 
 #           - script: |
 #               helm repo add denoocecreg denoocecreg.azurecr.io
