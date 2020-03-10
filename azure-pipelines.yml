@@ -23,24 +23,24 @@ variables:
   
 
 stages:
-# - stage: Build
-#   displayName: Build stage
-#   jobs:  
-#   - job: Build
-#     displayName: Build
-#     pool:
-#       vmImage: $(vmImageName)
-#     steps:
-#     - task: Docker@2
-#       displayName: Build and push an image to container registry
-#       inputs:
-#         command: buildAndPush
-#         repository: $(imageRepository)
-#         dockerfile: $(dockerfilePath)
-#         containerRegistry: $(dockerRegistryServiceConnection)
-#         tags: |
-#           $(tag)
-#           latest
+- stage: Build
+  displayName: Build stage
+  jobs:  
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+          latest
     
 
 - stage: Deploy
@@ -64,9 +64,9 @@ stages:
               helmVersionToInstall: '3.1.1'
 
           - script: |
+              helm repo add denoocecreg.azurecr.io
               helm repo update
               exit 0
-
           - task: HelmDeploy@0
             inputs:
               connectionType: 'Kubernetes Service Connection'
