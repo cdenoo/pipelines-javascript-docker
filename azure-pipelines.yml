@@ -38,13 +38,16 @@ stages:
           $(build.buildId)
           latest
     - script: |
-        az login --service-principal -u $(clientID) -p $(spSecret) --tenant $(tenantID)
-        az acr login -n denoocecreg
         helm package ./charts/newchart --version $(Build.BuildNumber) \
           --destination $(Build.ArtifactStagingDirectory)
+      displayName: Build helm package
+    - script: |
+        az login --service-principal -u $(clientID) -p $(spSecret) --tenant $(tenantID)
+        az acr login -n denoocecreg
         az acr helm push \
           --name $(ACRName) \
           $(Build.ArtifactStagingDirectory)/$(dockerImageRepository)-$(Build.BuildNumber).tgz
+      displayName: Push helm package to ACR
 
 # - stage: Deploy
 #   displayName: Deploy stage
