@@ -9,17 +9,13 @@ resources:
 - repo: self
 
 variables:
-
-  # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: 'CREG'
-  imageRepository: 'app'
-  containerRegistry: 'denoocecreg.azurecr.io'
-  dockerfilePath: '**/Dockerfile'
-  tag: '$(Build.BuildId)'
-  imagePullSecret: 'myimagepullsecretv2'
+- group: DemoVariables
+- name: dockerfilePath
+  value: '**/Dockerfile'
 
   # Agent VM image name
-  vmImageName: 'ubuntu-latest'
+- name: vmImageName
+  value: 'ubuntu-latest'
   
 
 stages:
@@ -35,11 +31,11 @@ stages:
       displayName: Build and push an image to container registry
       inputs:
         command: buildAndPush
-        repository: $(imageRepository)
+        repository: $(dockerImageRepository)
         dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
+        containerRegistry: $(dockerConnectionName)
         tags: |
-          $(tag)
+          $(build.buildId)
           latest
     - script: |
         az login --service-principal -u $(clientID) -p $(spSecret) --tenant $(tenantID)
@@ -47,8 +43,8 @@ stages:
         helm package ./charts/newchart --version $(Build.BuildNumber) \
           --destination $(Build.ArtifactStagingDirectory)
         az acr helm push \
-          --name $(containerRegistry) \
-          $(Build.ArtifactStagingDirectory)/$(imageRepository)-$(Build.BuildNumber).tgz
+          --name $(dockerConnectionName) \
+          $(Build.ArtifactStagingDirectory)/$(dockerImageRepository)-$(Build.BuildNumber).tgz
 
 # - stage: Deploy
 #   displayName: Deploy stage
