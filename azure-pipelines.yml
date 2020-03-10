@@ -73,7 +73,7 @@ stages:
               kubernetesServiceConnection: 'KUBE'
               command: 'install'
               chartType: 'Name'
-              chartName: 'newchart'
+              chartName: 'denoocecreg/newchart'
           # - task: HelmDeploy@0
           #   inputs:
           #     connectionType: 'Kubernetes Service Connection'
