@@ -12,7 +12,7 @@ variables:
 - group: DemoVariables
 - name: dockerfilePath
   value: '**/Dockerfile'
-
+  
   # Agent VM image name
 - name: vmImageName
   value: 'ubuntu-latest'
@@ -43,7 +43,7 @@ stages:
         helm package ./charts/newchart --version $(Build.BuildNumber) \
           --destination $(Build.ArtifactStagingDirectory)
         az acr helm push \
-          --name $(dockerConnectionName) \
+          --name $(dockerImageRepository) \
           $(Build.ArtifactStagingDirectory)/$(dockerImageRepository)-$(Build.BuildNumber).tgz
 
 # - stage: Deploy
