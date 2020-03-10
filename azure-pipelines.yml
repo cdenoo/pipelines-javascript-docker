@@ -23,24 +23,24 @@ variables:
   
 
 stages:
-- stage: Build
-  displayName: Build stage
-  jobs:  
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: $(vmImageName)
-    steps:
-    # - task: Docker@2
-    #   displayName: Build and push an image to container registry
-    #   inputs:
-    #     command: buildAndPush
-    #     repository: $(imageRepository)
-    #     dockerfile: $(dockerfilePath)
-    #     containerRegistry: $(dockerRegistryServiceConnection)
-    #     tags: |
-    #       $(tag)
-    #       latest
+# - stage: Build
+#   displayName: Build stage
+#   jobs:  
+#   - job: Build
+#     displayName: Build
+#     pool:
+#       vmImage: $(vmImageName)
+#     steps:
+#     - task: Docker@2
+#       displayName: Build and push an image to container registry
+#       inputs:
+#         command: buildAndPush
+#         repository: $(imageRepository)
+#         dockerfile: $(dockerfilePath)
+#         containerRegistry: $(dockerRegistryServiceConnection)
+#         tags: |
+#           $(tag)
+#           latest
 
 - stage: Deploy
   displayName: Deploy stage
@@ -67,8 +67,8 @@ stages:
                 kubernetesServiceConnection: 'KUBE'
                 command: 'upgrade'
                 chartType: 'Name'
-                chartName: '$(containerRegistry)/$(containerRepository)'
-                releaseName: '$(containerRepository)'
+                chartName: '$(containerRegistry)/denoocecreg'
+                releaseName: 'denoocecreg'
 
 
 #           - script: |
