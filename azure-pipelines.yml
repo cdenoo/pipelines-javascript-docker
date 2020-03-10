@@ -56,19 +56,20 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: HelmInstaller@1
-            displayName: Install helm version 3.1.1
-            inputs:
-              helmVersionToInstall: '3.1.1'
-          - task: HelmDeploy@0
-            inputs:
-              connectionType: 'Kubernetes Service Connection'
-              kubernetesServiceConnection: 'KUBE'
-              command: 'install'
-              chartType: 'FilePath'
-              chartPath: './newchart'
-          - task: HelmDeploy@0
-            inputs:
-              connectionType: 'Kubernetes Service Connection'
-              kubernetesServiceConnection: 'KUBE'
-              command: 'ls'
+          # - task: HelmInstaller@1
+          #   displayName: Install helm version 3.1.1
+          #   inputs:
+          #     helmVersionToInstall: '3.1.1'
+          # - task: HelmDeploy@0
+          #   inputs:
+          #     connectionType: 'Kubernetes Service Connection'
+          #     kubernetesServiceConnection: 'KUBE'
+          #     command: 'install'
+          #     chartType: 'FilePath'
+          #     chartPath: './newchart'
+          # - task: HelmDeploy@0
+          #   inputs:
+          #     connectionType: 'Kubernetes Service Connection'
+          #     kubernetesServiceConnection: 'KUBE'
+          #     command: 'ls'
+          - script: 'ls'
