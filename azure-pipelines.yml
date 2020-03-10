@@ -37,6 +37,10 @@ stages:
         tags: |
           $(build.buildId)
           latest
+    - task: HelmInstaller@1
+      displayName: Install helm version 3.1.1
+      inputs:
+        helmVersionToInstall: '3.1.1'
     - script: |
         helm package ./charts/newchart --version $(Build.BuildNumber) \
           --destination $(Build.ArtifactStagingDirectory)
