@@ -49,6 +49,7 @@ stages:
   jobs:
   - deployment: Deploy
     displayName: Deploy
+    environment: pipelines-javascript-docker
     pool:
       vmImage: $(vmImageName)
     strategy:
