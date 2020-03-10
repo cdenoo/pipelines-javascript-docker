@@ -42,7 +42,7 @@ stages:
       inputs:
         helmVersionToInstall: '3.1.1'
     - script: |
-        helm package ./charts/newchart --version $(Build.BuildNumber) \
+        helm package ./charts/$(dockerImageRepository) --version $(Build.BuildNumber) \
           --destination $(Build.ArtifactStagingDirectory)
       displayName: Build helm package
     - script: |
