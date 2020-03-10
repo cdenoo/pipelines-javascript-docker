@@ -46,7 +46,7 @@ stages:
       inputs:
         helmVersionToInstall: '3.1.1'
     - script: |
-        az acr login
+        az acr login -n denoocecreg
         az acr helm repo add -n newchart
         az acr helm repo update
       displayName: Adding and updating helm repo
