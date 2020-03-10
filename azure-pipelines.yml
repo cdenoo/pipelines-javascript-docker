@@ -72,4 +72,4 @@ stages:
           #     connectionType: 'Kubernetes Service Connection'
           #     kubernetesServiceConnection: 'KUBE'
           #     command: 'ls'
-          - script: 'ls'
+          - script: ls
