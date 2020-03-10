@@ -66,4 +66,5 @@ stages:
           #     connectionType: Kubernetes Service Connection
           #     kubernetesServiceEndpoint: KUBE
           # - script: 'helm install .\\newchart\\ --generate-name'
+          - script: 'az aks get-credentials -g gluo-denooce -n k8scl'
           - script: 'helm ls'
