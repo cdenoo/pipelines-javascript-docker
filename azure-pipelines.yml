@@ -41,6 +41,7 @@ stages:
 #         tags: |
 #           $(tag)
 #           latest
+    
 
 - stage: Deploy
   displayName: Deploy stage
@@ -61,6 +62,11 @@ stages:
             displayName: Install helm version 3.1.1
             inputs:
               helmVersionToInstall: '3.1.1'
+
+          - script: |
+              helm repo update
+              exit 0
+
           - task: HelmDeploy@0
             inputs:
               connectionType: 'Kubernetes Service Connection'
