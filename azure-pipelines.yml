@@ -52,9 +52,9 @@ stages:
           --name $(ACRName) \
           $(Build.ArtifactStagingDirectory)/$(dockerImageRepository)-$(Build.BuildNumber).tgz
       displayName: Push helm package to ACR
-    - task: PublishBuildArtifacts@1
-      inputs:
-        ArtifactName: helmchart
+
+    - upload: helmchart
+      artifact: helmchart
 
 - stage: Deploy
   displayName: Deploy stage
