@@ -11,8 +11,8 @@ resources:
 variables:
 
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '8660dbfa-9e09-4c52-b188-1a7c7da5c893'
-  imageRepository: 'cdenoopipelinesjavascriptdocker'
+  dockerRegistryServiceConnection: 'CREG'
+  imageRepository: 'app'
   containerRegistry: 'denoocecreg.azurecr.io'
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
@@ -23,41 +23,55 @@ variables:
   
 
 stages:
-# - stage: Build
-#   displayName: Build stage
-#   jobs:  
-#   - job: Build
-#     displayName: Build
-#     pool:
-#       vmImage: $(vmImageName)
-#     steps:
-#     - task: Docker@2
-#       displayName: Build and push an image to container registry
-#       inputs:
-#         command: buildAndPush
-#         repository: $(imageRepository)
-#         dockerfile: $(dockerfilePath)
-#         containerRegistry: $(dockerRegistryServiceConnection)
-#         tags: |
-#           $(tag)
-#           latest
-
-- stage: Deploy
-  displayName: Deploy stage
-  # dependsOn: Build
-
-  jobs:
-  - deployment: Deploy
-    displayName: Deploy
-    environment: pipelines-javascript-docker
+- stage: Build
+  displayName: Build stage
+  jobs:  
+  - job: Build
+    displayName: Build
     pool:
       vmImage: $(vmImageName)
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-            - script: dir
-              workingDirectory: $(Build.SourcesDirectory)
+    steps:
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+          latest
+
+    - task: HelmDeploy@0
+      displayName: 'Package Helm Chart'
+      inputs:
+        command: 'package'
+        chartPath: 'charts/newchart'
+        chartVersion: '$(Build.BuildNumber)'
+        save: false
+    - script: |
+        az login --service-principal -u $(clientID) -p $(spSecret) --tenant $(tenantID)
+        az acr login -n denoocecreg
+        az acr helm push \
+          --name $(containerRegistry) \
+          $(Build.ArtifactStagingDirectory)/$(imageRepository)-$(Build.BuildNumber).tgz
+
+# - stage: Deploy
+#   displayName: Deploy stage
+#   # dependsOn: Build
+
+#   jobs:
+#   - deployment: Deploy
+#     displayName: Deploy
+#     environment: pipelines-javascript-docker
+#     pool:
+#       vmImage: $(vmImageName)
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:
+#             - script: dir
+#               workingDirectory: $(Build.SourcesDirectory)
             # - task: HelmInstaller@1
             #   displayName: Install helm version 3.1.1
             #   inputs:
